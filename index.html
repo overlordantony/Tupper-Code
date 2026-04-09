@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tupper Codec — fórmula auto-referente</title>
+<link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+
+<header>
+  <h1>Tupper Codec</h1>
+  <p>La fórmula auto-referente de Tupper puede codificar cualquier imagen de 106×17 píxeles como un número entero gigante — y decodificarla de vuelta. Úsala para enviar mensajes ocultos como números.</p>
+  <div class="formula">⌊mod(⌊y/17⌋ · 2<sup>−17⌊x⌋ − mod(⌊y⌋, 17)</sup>, 2)⌋ ≥ 1/2</div>
+</header>
+
+<div class="app">
+
+  <div class="card">
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('encode')">Dibujar → número</button>
+      <button class="tab" onclick="switchTab('decode')">Número → imagen</button>
+    </div>
+
+    <div class="panel active" id="panel-encode">
+      <div class="toolbar">
+        <button onclick="clearGrid()">Limpiar</button>
+        <button onclick="promptText()">Escribir texto</button>
+        <button onclick="invertGrid()">Invertir</button>
+        <button onclick="loadExample('smile')">Ejemplo: cara</button>
+        <button onclick="loadSelfRef()">Auto-referente</button>
+      </div>
+      <div class="canvas-wrap">
+        <canvas id="drawCanvas"></canvas>
+      </div>
+      <p class="pixel-count" id="pixelCount">píxeles activos: 0 / 1802</p>
+
+      <div class="actions-row">
+        <button class="primary" onclick="encode()">Generar número k</button>
+      </div>
+
+      <div id="encodeOutput" style="display:none;">
+        <div class="output-box">
+          <div class="output-label">Número k (cópialo y envíalo)</div>
+          <div class="output-num" id="kValue"></div>
+        </div>
+        <div class="actions-row">
+          <button onclick="copyK()">Copiar número</button>
+          <button onclick="downloadK()">Guardar .txt</button>
+          <button onclick="shareK()">Compartir</button>
+        </div>
+        <p class="status" id="copyStatus"></p>
+      </div>
+    </div>
+
+    <div class="panel" id="panel-decode">
+      <p class="hint" style="margin-bottom:10px;">Pega aquí el número k que recibiste:</p>
+      <textarea id="kInput" placeholder="960939379918958884971672962127852754715004339660129306651505519271702802395266424689642842174350718121267153782770623355993237280874144307891325963941337723487857735749823926629715517173716995165232890538221612403238855866184013"></textarea>
+      <div class="actions-row">
+        <button class="primary" onclick="decode()">Decodificar imagen</button>
+        <button onclick="loadSelfRefDecode()">Cargar k auto-referente</button>
+      </div>
+      <p class="status" id="decodeStatus"></p>
+      <div id="decodeOutput" style="display:none; margin-top:12px;">
+        <div class="canvas-wrap">
+          <canvas id="decodeCanvas"></canvas>
+        </div>
+        <div class="actions-row" style="margin-top:10px;">
+          <button onclick="downloadImage()">Guardar imagen PNG</button>
+          <button onclick="sendToEncoder()">Editar en modo dibujo</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">¿Cómo funciona?</div>
+    <div class="info-box">
+      <p>Cada imagen de 106×17 es una matriz de bits. Esos bits se leen como un número binario gigante <code>n</code>. El número k que se comparte es simplemente <code>k = n × 17</code>. La fórmula de Tupper, evaluada en la franja de altura 17 que empieza en <code>y = k</code>, reproduce exactamente esos píxeles. Lo fascinante: uno de esos k dibuja la propia fórmula.</p>
+    </div>
+  </div>
+
+</div>
+
+<div id="zoomLens">
+  <canvas id="zoomCanvas" width="154" height="140"></canvas>
+  <div id="zoomCoords">x:0 y:0</div>
+</div>
+
+<footer>
+  Tupper Codec · basado en la Self-Referential Formula de Jeff Tupper (2001)<br>
+  El número k puede tener cientos de dígitos — eso es normal.
+</footer>
+
+<script src="./js/scripts.js"></script>
+</body>
+</html>
