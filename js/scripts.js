@@ -98,27 +98,24 @@ function promptText() {
   const txt = prompt('Texto a dibujar (máx ~14 chars recomendado):', 'HOLA');
   if (!txt) return;
   const off = document.createElement('canvas');
-  off.width = W * SCALE;
-  off.height = H * SCALE;
+  off.width = W;
+  off.height = H;
   const ctx2 = off.getContext('2d');
-  const fs = Math.min(H * SCALE * 0.82, Math.floor(W * SCALE * 0.9 / Math.max(txt.length, 1) * 1.55));
+  ctx2.fillStyle = '#ffffff';
+  ctx2.fillRect(0, 0, W, H);
+  const fs = Math.max(1, Math.min(H * 0.85, Math.floor(W * 0.9 / Math.max(txt.length, 1) * 1.4)));
   ctx2.font = `bold ${fs}px monospace`;
   ctx2.textBaseline = 'middle';
+  ctx2.fillStyle = '#000000';
   const tw = ctx2.measureText(txt).width;
-  const tx = Math.max(2, (W * SCALE - tw) / 2);
-  ctx2.fillStyle = '#000';
-  ctx2.fillText(txt, tx, H * SCALE / 2);
-  const id = ctx2.getImageData(0, 0, W * SCALE, H * SCALE);
+  const tx = Math.max(0, (W - tw) / 2);
+  ctx2.fillText(txt, tx, H / 2);
+  const id = ctx2.getImageData(0, 0, W, H);
   grid = Array.from({length:H}, () => new Array(W).fill(0));
   for (let y = 0; y < H; y++) {
     for (let x = 0; x < W; x++) {
-      let hit = 0;
-      for (let dy = 0; dy < SCALE && !hit; dy++)
-        for (let dx = 0; dx < SCALE && !hit; dx++) {
-          const i = ((y * SCALE + dy) * W * SCALE + (x * SCALE + dx)) * 4;
-          if (id.data[i] < 128) hit = 1;
-        }
-      grid[y][x] = hit;
+      const i = (y * W + x) * 4;
+      grid[y][x] = id.data[i] < 128 ? 1 : 0;
     }
   }
   renderDraw();
