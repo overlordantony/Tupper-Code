@@ -2,10 +2,6 @@
 
 Herramienta para codificar y decodificar imágenes usando la **fórmula auto-referente de Jeff Tupper** (2001). Cualquier dibujo de 106×17 píxeles puede representarse como un número entero gigante — y viceversa. Ideal para enviar mensajes ocultos disfrazados de números.
 
-No requiere instalación, servidor, ni conexión a internet. Todo corre en el navegador.
-
----
-
 ## Cómo se usa
 
 ### Dibujar → número
